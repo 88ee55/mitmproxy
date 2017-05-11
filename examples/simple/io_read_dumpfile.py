@@ -1,12 +1,14 @@
 #!/usr/bin/env python
+
+# type: ignore
 #
 # Simple script showing how to read a mitmproxy dump file
 #
-
 from mitmproxy import io
 from mitmproxy.exceptions import FlowReadException
 import pprint
 import sys
+
 
 with open(sys.argv[1], "rb") as logfile:
     freader = io.FlowReader(logfile)

@@ -37,25 +37,29 @@ def dump_system_info():
         except:
             pass
 
+    bin_indicator = ""  # PyInstaller builds indicator, if using precompiled binary
+    if getattr(sys, 'frozen', False):
+        bin_indicator = "Precompiled Binary"
+
     data = [
-        "Mitmproxy version: {} ({})".format(version.VERSION, git_describe),
+        "Mitmproxy version: {} ({}) {}".format(version.VERSION, git_describe, bin_indicator),
         "Python version: {}".format(platform.python_version()),
         "Platform: {}".format(platform.platform()),
         "SSL version: {}".format(SSL.SSLeay_version(SSL.SSLEAY_VERSION).decode()),
     ]
     d = platform.linux_distribution()
     t = "Linux distro: %s %s %s" % d
-    if d[0]:  # pragma: no-cover
+    if d[0]:  # pragma: no cover
         data.append(t)
 
     d = platform.mac_ver()
     t = "Mac version: %s %s %s" % d
-    if d[0]:  # pragma: no-cover
+    if d[0]:  # pragma: no cover
         data.append(t)
 
     d = platform.win32_ver()
     t = "Windows version: %s %s %s %s" % d
-    if d[0]:  # pragma: no-cover
+    if d[0]:  # pragma: no cover
         data.append(t)
 
     return "\n".join(data)
@@ -135,11 +139,11 @@ def dump_stacks(signal=None, frame=None, file=sys.stdout, testing=False):
             if line:
                 code.append("  %s" % (line.strip()))
     print("\n".join(code), file=file)
-    if not testing:
+    if not testing:  # pragma: no cover
         sys.exit(1)
 
 
 def register_info_dumpers():
-    if os.name != "nt":
+    if os.name != "nt":  # pragma: windows no cover
         signal.signal(signal.SIGUSR1, dump_info)
         signal.signal(signal.SIGUSR2, dump_stacks)
